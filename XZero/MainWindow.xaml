@@ -1,0 +1,18 @@
+﻿<Window x:Class="XZero.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="274" Width="296">
+    <Grid x:Name="Grid" Height="246" VerticalAlignment="Top" Margin="0,0,0,-2">
+        <Button x:Name="Button1" Content="" HorizontalAlignment="Left" Margin="29,37,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1"   Tag="1"/>
+        <Button x:Name="Button2" Content="" HorizontalAlignment="Left" Margin="109,37,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1"  Tag="2"/>
+        <Button x:Name="Button3" Content="" HorizontalAlignment="Left" Margin="189,37,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1"  Tag="3"/>
+        <Button x:Name="Button4" Content="" HorizontalAlignment="Left" Margin="29,101,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1"  Tag="4"/>
+        <Button x:Name="Button5" Content="" HorizontalAlignment="Left" Margin="109,101,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1" Tag="5"/>
+        <Button x:Name="Button6" Content="" HorizontalAlignment="Left" Margin="189,101,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1" Tag="6"/>
+        <Button x:Name="Button7" Content="" HorizontalAlignment="Left" Margin="29,165,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1"  Tag="7"/>
+        <Button x:Name="Button8" Content="" HorizontalAlignment="Left" Margin="109,165,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1" Tag="8"/>
+        <Button x:Name="Button9" Content="" HorizontalAlignment="Left" Margin="189,165,0,0" VerticalAlignment="Top" Width="75" Height="59" Click="Button_Click_1" Tag="9"/>
+        <Label x:Name="lbSymbol" Content="Вы играете: " HorizontalAlignment="Left" Margin="39,10,0,0" VerticalAlignment="Top" Width="145"/>
+
+    </Grid>
+</Window>
