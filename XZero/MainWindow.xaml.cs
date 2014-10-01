@@ -55,7 +55,7 @@ namespace XZero
             {
                 MessageBox.Show("Подедил " + wge.Message);
             }
-            catch (GameOverExeption woe)
+            catch (GameOverExeption)
             { MessageBox.Show("Игра закончена"); }
         }
 
@@ -110,6 +110,18 @@ namespace XZero
 
             if (p1 >= 3 || p2 >= 3) throw new WinGameExeption(p.ToString());
         }
+
+        public int this[Players p]
+        { 
+            get 
+            {
+                if (p == Players.p1) return p1;
+                else return p2;
+            }
+        }
+
+        public int count()
+        { return p1 + p2; }
     }
 
     class WinGameExeption : ApplicationException
@@ -117,8 +129,8 @@ namespace XZero
         public WinGameExeption(string msg) : base(msg) { }
     }
 
-    class GameOverExeption : ApplicationException
-    {}
+    class GameOverExeption : ApplicationException { }
+    class GameLogicExeption : ApplicationException { }
 
     class GemeLogic
     {
@@ -140,7 +152,7 @@ namespace XZero
             Etalonline.Add(new WinLine(3, 6, 9), new PlayerPositionQty(0, 0));
 
             Etalonline.Add(new WinLine(1, 5, 9), new PlayerPositionQty(0, 0));
-            Etalonline.Add(new WinLine(3, 5, 9), new PlayerPositionQty(0, 0));
+            Etalonline.Add(new WinLine(3, 5, 7), new PlayerPositionQty(0, 0));
 
             foreach (var item in Buttons)
             {
@@ -171,9 +183,36 @@ namespace XZero
             if (ButtonPool.Count == 0) throw new GameOverExeption();
         }
 
+        Button GetButtonFromWinLine(WinLine wl)
+        {
+            foreach (Button b in ButtonPool)
+            {
+                int tag = Int32.Parse(b.Tag.ToString());
+                if (tag.Equals(wl.X1) || tag.Equals(wl.X2) || tag.Equals(wl.X3)) 
+                    return b;
+            }
+
+            throw new GameLogicExeption();
+        }
+
         public Button GetPcButton()
         {
-            return this.ButtonPool[this.ButtonPool.Count - 1];
+                        
+            //проверим Можно ли выиграть?
+            foreach (var item in Etalonline)
+            {
+                if (item.Value[this.CurentPlayer] == 2 && item.Value.count() == 2) 
+                    return GetButtonFromWinLine(item.Key);
+            }
+
+            //Проверим может противник может выиграть
+            foreach (var item in Etalonline)
+            {
+                if (item.Value[this.CurentPlayer] == 0 && item.Value.count() == 2)
+                    return GetButtonFromWinLine(item.Key);
+            }
+            
+            return ButtonPool[MyRandom.R.Next(ButtonPool.Count-1)];
         }
     }
 }
