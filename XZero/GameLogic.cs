@@ -129,22 +129,28 @@ namespace XZero
 
             if (ButtonPool.Remove(B))
             {
-                //Запишем ходы
-                foreach (var item in Etalonline)
-                {
-                    if (item.Key.Contains(tag)) item.Value.incr(this.CurentPlayer);
-                }
 
-                //сменим игрока
-                if (this.CurentPlayer == Players.Player1)
+                try
                 {
-                    B.Content = "X";
-                    this.CurentPlayer = Players.Player2;
+                    //Запишем ходы
+                    foreach (var item in Etalonline)
+                    {
+                        if (item.Key.Contains(tag)) item.Value.incr(this.CurentPlayer);
+                    }
                 }
-                else
+                finally //Необходимо для того чтоб в случае победы на последней кнопке изменился контент
                 {
-                    B.Content = "O";
-                    this.CurentPlayer = Players.Player1;
+                    //сменим игрока
+                    if (this.CurentPlayer == Players.Player1)
+                    {
+                        B.Content = "X";
+                        this.CurentPlayer = Players.Player2;
+                    }
+                    else
+                    {
+                        B.Content = "O";
+                        this.CurentPlayer = Players.Player1;
+                    }
                 }
 
                 B.IsEnabled = false;
