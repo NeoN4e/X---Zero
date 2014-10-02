@@ -17,10 +17,11 @@ namespace XZero
 {
     public partial class MainWindow : Window
     {
-        GemeLogic GL;
-        
+        GemeLogic GL; //Объект типа игра
+                        
         void StartNewGame()
         {
+            //Откроем окно настроек
             GL =  new GemeLogic(Grid.Children);
             ChoseWindow win = new ChoseWindow(GL);
             win.ShowDialog();
@@ -32,7 +33,7 @@ namespace XZero
         {
             InitializeComponent();
             
-            StartNewGame();
+            StartNewGame();//Начнем игру
         }
         
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -41,13 +42,7 @@ namespace XZero
             {
                 Button b = (sender as Button);
 
-                //GL.Move(b);
                 GL.PressButton(b);
-
-                //Ход 2-го игрока
-                b = GL.GetPcButton();
-                GL.PressButton(b);
-    
             }
             catch (WinGameExeption wge)
             { 

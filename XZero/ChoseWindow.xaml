@@ -7,9 +7,9 @@
         <RadioButton x:Name="rbO" Content="O" HorizontalAlignment="Left" Margin="185,108,0,0" VerticalAlignment="Top" GroupName="SymbolGroup" Checked="rb_Checked"/>
         <Label Content="Сделайте ваш выбор" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="272" FontSize="20" FontWeight="Bold" HorizontalContentAlignment="Center"/>
         <Label Content="Режим игры:" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top"/>
-        <RadioButton Content="Player - Player" HorizontalAlignment="Left" Margin="27,80,0,0" VerticalAlignment="Top" Width="100" GroupName="GameMode"/>
-        <RadioButton Content="Player - PC" HorizontalAlignment="Left" Margin="27,101,0,0" VerticalAlignment="Top" GroupName="GameMode" IsChecked="True"/>
-        <RadioButton Content="PC - PC" HorizontalAlignment="Left" Margin="27,122,0,0" VerticalAlignment="Top" GroupName="GameMode"/>
+        <RadioButton Content="Player - Player" HorizontalAlignment="Left" Margin="27,80,0,0" VerticalAlignment="Top" Width="100" GroupName="GameMode" Checked="RadioButton_PlayerPlayer"/>
+        <RadioButton Content="Player - PC" HorizontalAlignment="Left" Margin="27,101,0,0" VerticalAlignment="Top" GroupName="GameMode" IsChecked="True" Checked="RadioButton_PlayerPC"/>
+        <RadioButton Content="PC - PC" HorizontalAlignment="Left" Margin="27,122,0,0" VerticalAlignment="Top" GroupName="GameMode" Checked="RadioButton_PCPC"/>
         <Label Content="Символ:" HorizontalAlignment="Left" Margin="168,54,0,0" VerticalAlignment="Top"/>
         <Button Content="Start Game" HorizontalAlignment="Left" Margin="15,160,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_Start"/>
         <Button Content="Exit" HorizontalAlignment="Left" Margin="185,160,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_Exit"/>

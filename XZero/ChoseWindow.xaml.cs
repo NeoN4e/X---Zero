@@ -23,8 +23,8 @@ namespace XZero
 
         public ChoseWindow(GemeLogic gl)
         {
-            InitializeComponent();
             this.GL = gl;
+            InitializeComponent();
         }
 
         private void Button_Click_Start(object sender, RoutedEventArgs e)
@@ -46,16 +46,20 @@ namespace XZero
             }
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private void RadioButton_PlayerPC(object sender, RoutedEventArgs e)
         {
-            //GL.onMove += (Button b) => 
-            //{            
-            //    GL.PressButton(b);
-
-            //    //Ход 2-го игрока
-            //    b = GL.GetPcButton();
-            //    GL.PressButton(b);};
-            //}
+            this.GL.SetGameType(GameType.PlayerPC);
         }
+
+        private void RadioButton_PlayerPlayer(object sender, RoutedEventArgs e)
+        {
+            this.GL.SetGameType(GameType.PlayerPlayer);
+        }
+
+        private void RadioButton_PCPC(object sender, RoutedEventArgs e)
+        {
+            this.GL.SetGameType(GameType.PcPC);
+        }
+
     }
 }

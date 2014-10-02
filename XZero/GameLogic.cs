@@ -9,6 +9,18 @@ using System.Windows.Controls;
 
 namespace XZero
 {
+
+
+    /// <summary>Игроки</summary>
+    public enum Players { Player1, Player2 }
+
+    /// <summary>Игровые Символы</summary>
+    public enum GameSymbol { X, O }
+
+    /// <summary>Тип Игры</summary>
+    public enum GameType { PlayerPlayer, PlayerPC, PcPC}
+
+    ///<summary>Хранит Комбинации линий для победы</summary>
     struct WinLine
     {
         public int X1;
@@ -28,17 +40,9 @@ namespace XZero
             if (this.X1.Equals(item) || this.X2.Equals(item) || this.X3.Equals(item)) return true;
             return false;
         }
-
-        public override string ToString()
-        {
-            return "" + X1 + "," + X2 + "," + X3;
-        }
     }
 
-    public enum Players { Player1, Player2 }
-
-    public enum GameSymbol { X, O }
-
+    ///<summary>Количиство позиций занятых в той или иной линии</summary>
     class PlayerPositionQty
     {
         int p1;
@@ -50,6 +54,7 @@ namespace XZero
             this.p2 = p2;
         }
 
+        /// <summary>Фиксирует факт нажатия кнопки в линии, 3- надатия - WinGameExeption</summary>
         public void incr(Players p)
         {
             if (p == Players.Player1) this.p1++;
@@ -57,7 +62,7 @@ namespace XZero
 
             if (p1 >= 3 || p2 >= 3) throw new WinGameExeption(p.ToString());
         }
-
+        
         public int this[Players p]
         {
             get
@@ -67,37 +72,42 @@ namespace XZero
             }
         }
 
+        /// <summary>Количество нажатых кнопок в линии</summary>
         public int count()
         { return p1 + p2; }
     }
 
+    /// <summary>В случае победы</summary>
     class WinGameExeption : ApplicationException
     {
         public WinGameExeption(string msg) : base(msg) { }
     }
-
     class GameOverExeption : ApplicationException { }
+    
+    /// <summary>Ошибка логики</summary>
     class GameLogicExeption : ApplicationException { }
 
+    //Делегат
+    delegate void MyDelgButton_Click(Button b);
+    
+    /// <summary>Реализует всю логику игры</summary>
     public class GemeLogic
     {
-        public delegate void OnMoveDelegat(Button b);
-        public event OnMoveDelegat onMove;
-        public void Move(Button b)
-        {
-            if (onMove != null) onMove(b);
-        }
-        
+        /// <summary>Делегат Определяющий Логику в Зависимости от типа игры</summary>
+        MyDelgButton_Click OnButtonClick;
+
+        /// <summary>Кто сейчас Ходит</summary>
         public Players CurentPlayer {get; private set;}
 
+        ///<summary>Сколько и кем кнопок нажато в конкретной линии</summary>
         Dictionary<WinLine, PlayerPositionQty> Etalonline = new Dictionary<WinLine, PlayerPositionQty>();
 
+        ///<summary>Кнопки которые можно нажимать</summary>
         List<Button> ButtonPool = new List<Button>();
 
         public GemeLogic(UIElementCollection Buttons)
         {
-            //PlayerPositionQty qty = new PlayerPositionQty(0,0);
-
+            
             Etalonline.Add(new WinLine(1, 2, 3), new PlayerPositionQty(0, 0));
             Etalonline.Add(new WinLine(4, 5, 6), new PlayerPositionQty(0, 0));
             Etalonline.Add(new WinLine(7, 8, 9), new PlayerPositionQty(0, 0));
@@ -120,14 +130,57 @@ namespace XZero
                 }
             }
 
-            CurentPlayer = Players.Player1;
+            CurentPlayer = Players.Player1;//1-м ходит 1-й игрок
         }
 
         public void PressButton(Button B)
         {
-            int tag = Int32.Parse(B.Tag.ToString());
+            if(this.OnButtonClick != null) OnButtonClick(B);
+        }
 
-            if (ButtonPool.Remove(B))
+        /// <summary> Установить Тип Игры</summary>
+        public void SetGameType(GameType GT)
+        {
+            switch (GT)
+            {
+                case GameType.PcPC:
+                    OnButtonClick = (Button B) =>
+                                    {
+                                        //Отработаем нажатие пользователя
+                                        OnPressButton(B);
+
+                                        //Ход 2-го игрока
+                                        while (true)
+                                        {
+                                            B = GetPcButton();
+                                            OnPressButton(B);
+                                        }
+                                    };
+                    break;
+                case GameType.PlayerPC:
+                    OnButtonClick = (Button B) =>
+                                    {
+                                        //Отработаем нажатие пользователя
+                                        OnPressButton(B);
+
+                                        //Ход 2-го игрока
+                                        B = GetPcButton();
+                                        OnPressButton(B);
+                                    };
+                    break;
+                case GameType.PlayerPlayer:
+                    OnButtonClick = (Button B) => { OnPressButton(B); };
+                    break;
+            }
+        }
+
+        /// <summary>Обработчик события нажатие ЛОгической кнопки</summary>
+        public void OnPressButton(Button B)
+        {
+           
+            int tag = Int32.Parse(B.Tag.ToString()); // Получим ИНт номер кнопки
+
+            if (ButtonPool.Remove(B)) //Если кнопку еще не нажимали вернет ТРУЕ
             {
 
                 try
@@ -135,31 +188,33 @@ namespace XZero
                     //Запишем ходы
                     foreach (var item in Etalonline)
                     {
-                        if (item.Key.Contains(tag)) item.Value.incr(this.CurentPlayer);
+                        if (item.Key.Contains(tag)) item.Value.incr(this.CurentPlayer); // Если в лини есть цифра - Увеличим счетчик тек пользователя
                     }
                 }
                 finally //Необходимо для того чтоб в случае победы на последней кнопке изменился контент
                 {
+                    
                     //сменим игрока
                     if (this.CurentPlayer == Players.Player1)
                     {
-                        B.Content = "X";
+                        B.Content = GameSymbol.X;
                         this.CurentPlayer = Players.Player2;
                     }
                     else
                     {
-                        B.Content = "O";
+                        B.Content = GameSymbol.O;
                         this.CurentPlayer = Players.Player1;
                     }
                 }
 
-                B.IsEnabled = false;
+                B.IsEnabled = false; // Сделаем недоступной нажатую кнопку
             }
 
             //Завершим игру если все кнопки нажаты
             if (ButtonPool.Count == 0) throw new GameOverExeption();
         }
 
+        /// <summary>Метод ИИ Выбирает ненажатую кнопку в текущей линии</summary>
         Button GetButtonFromWinLine(WinLine wl)
         {
             foreach (Button b in ButtonPool)
@@ -172,6 +227,7 @@ namespace XZero
             throw new GameLogicExeption();
         }
 
+        /// <summary>Метод ИИ Логика Хода</summary>
         public Button GetPcButton()
         {
 
@@ -189,6 +245,7 @@ namespace XZero
                     return GetButtonFromWinLine(item.Key);
             }
 
+            //Ходим на угад
             return ButtonPool[MyRandom.R.Next(ButtonPool.Count - 1)];
         }
     }
